@@ -5,7 +5,11 @@ class SongsController < ApplicationController
       if @artist.nil?
         redirect_to artists_path, alert: "Artist not found"
       else
-        @songs = @artist.songs
+        if Preference.first && Preference.first.song_sort_order
+          @songs = @artist.songs.order(name: Preference.first.song_sort_order)
+        else
+          @songs = @artist.songs
+        end
       end
     else
       @songs = Song.all
